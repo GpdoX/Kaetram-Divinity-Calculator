@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divinity Calculator XP</title>
+    <style>
+
+body {
+            background-image: url('fundo.png');
+            background-repeat: repeat; /* Repetição horizontal e vertical /
+            background-size: auto; / Tamanho original da imagem */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .coin {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .coin img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .coin-name {
+            margin-right: 10px;
+            width: 100px;
+        }
+        .coin-xp {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Divinity Calculator XP</h2>
+    
+    <div class="coin">
+        <img src="IMG\soul.png" alt="Soul">
+        <span class="coin-name">Soul</span>
+        <input type="number" id="soul" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="soulXP">0</span></span>
+    </div>
+
+    <div class="coin">
+        <img src="IMG\spirit.png" alt="Spirit">
+        <span class="coin-name">Spirit</span>
+        <input type="number" id="spirit" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="spiritXP">0</span></span>
+    </div>
+
+    <div class="coin">
+        <img src="IMG\essence.png" alt="Essence">
+        <span class="coin-name">Essence</span>
+        <input type="number" id="essence" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="essenceXP">0</span></span>
+    </div>
+
+    <div class="coin">
+        <img src="IMG\psyche.png" alt="Psyche">
+        <span class="coin-name">Psyche</span>
+        <input type="number" id="psyche" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="psycheXP">0</span></span>
+    </div>
+
+    <div class="coin">
+        <img src="IMG\ethos.png" alt="Ethos">
+        <span class="coin-name">Ethos</span>
+        <input type="number" id="ethos" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="ethosXP">0</span></span>
+    </div>
+
+    <div class="coin">
+        <img src="IMG\pneuma.png" alt="Pneuma">
+        <span class="coin-name">Pneuma</span>
+        <input type="number" id="pneuma" value="0" min="0" onchange="calculateTotal()" />
+        <span class="coin-xp">XP: <span id="pneumaXP">0</span></span>
+    </div>
+
+    <h3>Total XP: <span id="totalXP">0</span></h3>
+	
+    <div class="coin">
+        <img src="IMG\xp.png" alt="XP">
+        <span class="coin-name">Current XP: </span>
+        <input type="number" id="xpatual" value="0" min="0" onchange="calculateTotal()" />
+        </span>
+    </div>
+	
+	<h3>Final Level : <span id="nivfinal">0</span></h3>
+	
+</div>
+
+<script>
+    const values = {
+        soul: 8,
+        spirit: 20,
+        essence: 55,
+        psyche: 256,
+        ethos: 455,
+        pneuma: 965
+    };
+	
+	const xpLevels = [
+        0, 83, 174, 275, 387, 511, 648, 799, 966, 1151, 1355, 1580, 1829, 2103, 2406, 
+        2740, 3109, 3517, 3967, 4463, 5011, 5616, 6283, 7020, 7833, 8730, 9720, 10813, 
+        12020, 13352, 14822, 16444, 18235, 20212, 22394, 24802, 27460, 30394, 33633, 
+        37209, 41156, 45513, 50323, 55633, 61495, 67966, 75110, 82996, 91702, 101314, 
+        111925, 123640, 136573, 150851, 166614, 184017, 203231, 224443, 247862, 273718, 
+        302264, 333780, 368575, 406990, 449403, 496229, 547928, 605006, 668024, 737600, 
+        814417, 899228, 992866, 1096249, 1210391, 1336413, 1475551, 1629170, 1798777, 
+        1986037, 2192787, 2421055, 2673082, 2951341, 3258562, 3597759, 3972261, 4385743, 
+        4842262, 5346298, 5902797, 6517219, 7195594, 7944579, 8771523, 9684541, 10692593, 
+        11805570, 13034394, 14391123, 15889071, 17542938, 19368953, 21385034, 23610966, 
+        26068592, 28782028, 31777902, 35085613, 38737619, 42769758, 47221598, 52136826, 
+        57563675, 63555399, 70170796, 77474784, 85539037, 94442692, 104273121
+    ];
+
+    function calculateTotal() {
+        let total = 0;
+
+        for (let key in values) {
+            const quantity = parseInt(document.getElementById(key).value) || 0;
+            const coinTotal = quantity * values[key];
+            total += coinTotal;
+
+            // Atualiza o total de XP de cada moeda
+            document.getElementById(`${key}XP`).textContent = coinTotal;
+        }
+
+        // Atualiza o total geral de XP
+        document.getElementById('totalXP').textContent = total;
+		
+		let xp = (parseInt(document.getElementById('xpatual').value) || 0) + total;
+
+        let nivel = 1;
+        for (let i = 0; i < xpLevels.length; i++) {
+            if (xp < xpLevels[i]) {
+                nivel = i;
+                break;
+            }
+        }
+
+        document.getElementById('nivfinal').textContent = nivel;
+    }
+	
+	
+</script>
+
+</body>
+</html>
